@@ -16,7 +16,7 @@ class User:
 
 
 @dataclass
-class ToDoItem:
+class TodoItem:
     """Date model representing a todo item"""
 
     id: str
