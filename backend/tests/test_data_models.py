@@ -1,7 +1,7 @@
 """
 Implements the tests for data models of application
 """
-from app.models import User, ToDoItem
+from app.models import User, TodoItem
 from datetime import datetime, timedelta
 import pytest
 
@@ -37,7 +37,7 @@ def test_default_todo_model():
         id="123"
     )
 
-    todo = ToDoItem(
+    todo = TodoItem(
         title="test",
         description="test",
         due_by=datetime.now() + timedelta(days=1),
@@ -71,7 +71,7 @@ def test_invalid_todo_status():
     )
 
     with pytest.raises(ValueError):
-        todo = ToDoItem(
+        todo = TodoItem(
             title="test",
             description="test",
             due_by=datetime.now() + timedelta(days=1),
@@ -93,7 +93,7 @@ def test_complete_todo_status():
         id="123"
     )
 
-    todo = ToDoItem(
+    todo = TodoItem(
         title="test",
         description="test",
         due_by=datetime.now() + timedelta(days=1),
@@ -119,7 +119,7 @@ def test_completed_at_is_not_overwritten():
         id="123"
     )
 
-    todo = ToDoItem(
+    todo = TodoItem(
         id="213",
         title="test",
         description="test",
