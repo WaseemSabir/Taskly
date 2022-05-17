@@ -34,5 +34,5 @@ class TodoItem:
                 f"Status must be either pending or completed, not {self.status}"
             )
 
-        if self.status == "completed" and self.completed_at is None:
+        if self.status == "completed" and not self.completed_at:
             self.completed_at = datetime.now()

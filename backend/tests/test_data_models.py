@@ -22,8 +22,7 @@ def test_user_model():
     assert user.last_name == "sabir"
     assert user.email == "whatever@gmail.com"
     assert user.password == "hello@world"
-    assert user.id is not None
-    assert isinstance(user.id, str)
+    assert user.id == "123"
 
 
 def test_default_todo_model():
@@ -54,8 +53,7 @@ def test_default_todo_model():
     assert todo.due_by.date() == tommorow.date()
     assert todo.created_by == user
     assert todo.created_at.date() == today.date()
-    assert todo.id is not None
-    assert isinstance(todo.id, str)
+    assert todo.id == "213"
     assert todo.status == "pending"
     assert todo.completed_at is None
 
