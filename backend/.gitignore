@@ -1,2 +1,5 @@
 venv
 .pytest_cache/
+.env
+postgres-data
+__pycache__/

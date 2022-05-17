@@ -6,19 +6,20 @@ import uuid
 
 @dataclass
 class User:
-    """ Date model for user """
+    """Date model for user"""
 
     first_name: str
     last_name: str
     email: str
     password: str
-    id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    id: str
 
 
 @dataclass
 class ToDoItem:
-    """ Date model representing a todo item """
+    """Date model representing a todo item"""
 
+    id: str
     title: str
     description: str
     due_by: datetime
@@ -26,7 +27,6 @@ class ToDoItem:
     status: Literal["pending", "completed"] = field(default="pending")
     completed_at: datetime = field(default=None)
     created_at: datetime = field(default_factory=datetime.now)
-    id: str = field(default_factory=lambda: str(uuid.uuid4()))
 
     def __post_init__(self):
         if not self.status in ["pending", "completed"]:

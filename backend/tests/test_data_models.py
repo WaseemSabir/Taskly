@@ -15,6 +15,7 @@ def test_user_model():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
+        id="123"
     )
 
     assert user.first_name == "waseem"
@@ -34,6 +35,7 @@ def test_default_todo_model():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
+        id="123"
     )
 
     todo = ToDoItem(
@@ -41,6 +43,7 @@ def test_default_todo_model():
         description="test",
         due_by=datetime.now() + timedelta(days=1),
         created_by=user,
+        id="213"
     )
 
     tommorow = datetime.now() + timedelta(days=1)
@@ -66,6 +69,7 @@ def test_invalid_todo_status():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
+        id="123"
     )
 
     with pytest.raises(ValueError):
@@ -75,6 +79,7 @@ def test_invalid_todo_status():
             due_by=datetime.now() + timedelta(days=1),
             created_by=user,
             status="invalid",
+            id="213"
         )
 
 
@@ -87,6 +92,7 @@ def test_complete_todo_status():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
+        id="123"
     )
 
     todo = ToDoItem(
@@ -95,6 +101,7 @@ def test_complete_todo_status():
         due_by=datetime.now() + timedelta(days=1),
         created_by=user,
         status="completed",
+        id="213"
     )
 
     today = datetime.now()
@@ -111,9 +118,11 @@ def test_completed_at_is_not_overwritten():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
+        id="123"
     )
 
     todo = ToDoItem(
+        id="213",
         title="test",
         description="test",
         due_by=datetime.now() + timedelta(days=1),
