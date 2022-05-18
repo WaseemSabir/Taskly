@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Optional
 
 
 @dataclass
@@ -24,7 +24,7 @@ class TodoItem:
     due_by: datetime
     user_id: str
     status: Literal["pending", "completed"] = field(default="pending")
-    completed_at: datetime = field(default=None)
+    completed_at: Optional[datetime] = field(default=None)
     created_at: datetime = field(default_factory=datetime.now)
 
     def __post_init__(self):
