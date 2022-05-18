@@ -119,14 +119,17 @@ def test_completed_at_is_not_overwritten():
         id="123",
     )
 
+    yesterday = datetime.now() - timedelta(days=1)
+    tommorow = datetime.now() + timedelta(days=1)
+
     todo = TodoItem(
         id="213",
         title="test",
         description="test",
-        due_by=datetime.now() + timedelta(days=1),
+        due_by=tommorow,
         user_id=user.id,
         status="completed",
-        completed_at=datetime.now() - timedelta(days=1),
+        completed_at=yesterday,
     )
 
-    assert todo.completed_at.date() == (datetime.now() - timedelta(days=1)).date()
+    assert todo.completed_at.date() == yesterday.date()
