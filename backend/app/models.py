@@ -1,18 +1,17 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Literal
-import uuid
 
 
 @dataclass
 class User:
     """Date model for user"""
 
+    id: str
     first_name: str
     last_name: str
     email: str
     password: str
-    id: str
 
 
 @dataclass
@@ -23,7 +22,7 @@ class TodoItem:
     title: str
     description: str
     due_by: datetime
-    created_by: User
+    user_id: str
     status: Literal["pending", "completed"] = field(default="pending")
     completed_at: datetime = field(default=None)
     created_at: datetime = field(default_factory=datetime.now)
@@ -36,3 +35,6 @@ class TodoItem:
 
         if self.status == "completed" and not self.completed_at:
             self.completed_at = datetime.now()
+
+        if self.due_by < datetime.now():
+            raise ValueError(f"Due by date must be in the future!")

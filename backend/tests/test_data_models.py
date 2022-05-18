@@ -15,7 +15,7 @@ def test_user_model():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
-        id="123"
+        id="123",
     )
 
     assert user.first_name == "waseem"
@@ -34,15 +34,15 @@ def test_default_todo_model():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
-        id="123"
+        id="123",
     )
 
     todo = TodoItem(
         title="test",
         description="test",
         due_by=datetime.now() + timedelta(days=1),
-        created_by=user,
-        id="213"
+        user_id=user.id,
+        id="213",
     )
 
     tommorow = datetime.now() + timedelta(days=1)
@@ -51,7 +51,7 @@ def test_default_todo_model():
     assert todo.title == "test"
     assert todo.description == "test"
     assert todo.due_by.date() == tommorow.date()
-    assert todo.created_by == user
+    assert todo.user_id == user.id
     assert todo.created_at.date() == today.date()
     assert todo.id == "213"
     assert todo.status == "pending"
@@ -67,7 +67,7 @@ def test_invalid_todo_status():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
-        id="123"
+        id="123",
     )
 
     with pytest.raises(ValueError):
@@ -75,9 +75,9 @@ def test_invalid_todo_status():
             title="test",
             description="test",
             due_by=datetime.now() + timedelta(days=1),
-            created_by=user,
+            user_id=user.id,
             status="invalid",
-            id="213"
+            id="213",
         )
 
 
@@ -90,16 +90,16 @@ def test_complete_todo_status():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
-        id="123"
+        id="123",
     )
 
     todo = TodoItem(
         title="test",
         description="test",
         due_by=datetime.now() + timedelta(days=1),
-        created_by=user,
+        user_id=user.id,
         status="completed",
-        id="213"
+        id="213",
     )
 
     today = datetime.now()
@@ -116,7 +116,7 @@ def test_completed_at_is_not_overwritten():
         last_name="sabir",
         email="whatever@gmail.com",
         password="hello@world",
-        id="123"
+        id="123",
     )
 
     todo = TodoItem(
@@ -124,7 +124,7 @@ def test_completed_at_is_not_overwritten():
         title="test",
         description="test",
         due_by=datetime.now() + timedelta(days=1),
-        created_by=user,
+        user_id=user.id,
         status="completed",
         completed_at=datetime.now() - timedelta(days=1),
     )
