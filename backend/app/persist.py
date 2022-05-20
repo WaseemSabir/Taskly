@@ -53,7 +53,11 @@ class UserRepo(Repository):
 
             return self.get(model.id), ""
         except Exception as e:
-            return None, str(e).split(":")[1]
+            detailStr = str(e).split(":")[1]
+            if "exists" in detailStr.lower():
+                return None, "User already exists"
+            
+            return None, detailStr
 
     def update(self, id, model: User) -> tuple:
         try:
