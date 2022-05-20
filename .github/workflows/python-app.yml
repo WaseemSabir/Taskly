@@ -51,4 +51,5 @@ jobs:
           POSTGRES_PASSWORD_TEST: "postgres"
           POSTGRES_USER_TEST: "postgres"
           POSTGRES_DB_NAME_TEST: "postgres"
+          POSTGRES_CONNECTION_TIMEOUT_TEST: 10
           TESTING: "True"
