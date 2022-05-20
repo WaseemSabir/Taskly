@@ -78,7 +78,8 @@ class UserRepo(Repository):
 
             return self.get(id), ""
         except Exception as e:
-            return None, str(e).split(":")[1]
+            detailStr = str(e).split(":")[1]
+            return None, detailStr
 
     def delete(self, id) -> bool:
         try:
@@ -140,7 +141,8 @@ class TodoRepo(Repository):
 
             return self.get(model.id), ""
         except Exception as e:
-            return None, str(e).split(":")[1]
+            detailStr = str(e).split(":")[1]
+            return None, detailStr
 
     def update(self, id, model: TodoItem) -> tuple:
         try:
@@ -163,7 +165,8 @@ class TodoRepo(Repository):
 
             return self.get(id), ""
         except Exception as e:
-            return None, str(e).split(":")[1]
+            detailStr = str(e).split(":")[1]
+            return None, detailStr
 
     def delete(self, id) -> bool:
         try:
