@@ -95,4 +95,7 @@ def get_user_from_request(request):
 
 
 def get_general_response(data=[], success=True, message="", status=200):
+    if type(data) == dict:
+        data = [data]
+    
     return {"success": success, "message": message, "data": data}, status

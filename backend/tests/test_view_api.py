@@ -13,7 +13,7 @@ def test_register(set_testing_env, client, user_factory):
     user = user_factory
     response = client.post("/register", json=user.__dict__)
 
-    data = json.loads(response.get_data(as_text=True)).get("data")
+    data = json.loads(response.get_data(as_text=True)).get("data")[0]
 
     assert response.status_code == 200
     assert data.get("token")
@@ -29,7 +29,7 @@ def test_login(set_testing_env, client, register_user_factory):
         "/login", json={"email": user.email, "password": user.password}
     )
 
-    data = json.loads(response.get_data(as_text=True)).get("data")
+    data = json.loads(response.get_data(as_text=True)).get("data")[0]
 
     assert response.status_code == 200
     assert data.get("token")
@@ -60,7 +60,7 @@ def test_get_user_data_api(set_testing_env, client, register_user_factory):
 
     response = client.get("/user", headers={"Authorization": "Bearer " + token})
 
-    data = json.loads(response.get_data(as_text=True)).get("data")
+    data = json.loads(response.get_data(as_text=True)).get("data")[0]
 
     assert response.status_code == 200
     assert data.get("first_name") == user.first_name
@@ -80,7 +80,7 @@ def test_update_user_data_api(set_testing_env, client, register_user_factory):
         json={"first_name": "New Name", "last_name": "New Last Name"},
     )
 
-    data = json.loads(response.get_data(as_text=True)).get("data")
+    data = json.loads(response.get_data(as_text=True)).get("data")[0]
 
     assert response.status_code == 200
     assert data.get("first_name") == "New Name"
@@ -120,7 +120,7 @@ def test_create_todo_api(set_testing_env, client, register_user_factory, todo_fa
         },
     )
 
-    data = json.loads(response.get_data(as_text=True)).get("data")
+    data = json.loads(response.get_data(as_text=True)).get("data")[0]
 
     assert response.status_code == 200
     assert data.get("title") == todo.title
@@ -150,7 +150,7 @@ def test_update_todo_api(set_testing_env, client, register_user_factory, todo_fa
         },
     )
 
-    data = json.loads(response.get_data(as_text=True)).get("data")
+    data = json.loads(response.get_data(as_text=True)).get("data")[0]
 
     assert response.status_code == 200
     assert data.get("title") == "New Title"

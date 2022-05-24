@@ -99,6 +99,6 @@ def register_user_factory(user_factory, client):
     user.password = us_pass
 
     response = client.post("/login", json={"email": user.email, "password": us_pass})
-    data = json.loads(response.get_data(as_text=True)).get("data")
+    data = json.loads(response.get_data(as_text=True)).get("data")[0]
 
     return user, data.get("token")
