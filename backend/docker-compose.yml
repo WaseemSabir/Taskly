@@ -29,7 +29,6 @@ services:
       - -c
       - |
         python3 main.py
-        pytest tests/
     volumes:
       - .:/code
     ports:

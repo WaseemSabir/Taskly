@@ -4,11 +4,13 @@ Implements fixtures for tests.
 import pytest
 from random import choice
 from app.models import User, TodoItem
-from app.utils import generate_id, random_str
+from app.utils import generate_id, random_str, hash_password
 from app.database import Database
 from datetime import datetime, timedelta
 from app.persist import UserRepo
 import os
+from main import app
+from flask import json
 
 
 @pytest.fixture
@@ -76,3 +78,27 @@ def set_testing_env() -> None:
 
     yield
     os.environ["TESTING"] = "False"
+
+
+@pytest.fixture
+def client():
+    return app.test_client()
+
+
+@pytest.fixture
+def register_user_factory(user_factory, client):
+    """
+    get registred user and their token.
+    """
+    user = user_factory
+    us_pass = user.password
+    user.password = hash_password(user.password)
+    user_repo = UserRepo()
+    user_repo.create(user)
+
+    user.password = us_pass
+
+    response = client.post("/login", json={"email": user.email, "password": us_pass})
+    data = json.loads(response.get_data(as_text=True)).get("data")
+
+    return user, data.get("token")

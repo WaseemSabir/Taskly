@@ -1,10 +1,13 @@
+from app.database import Database
+from psycopg2 import OperationalError
+import time
+from app.models import User
+import jwt
 import os
+from app.persist import UserRepo
 import hashlib
 import string
 import random
-import time
-from app.database import Database
-from psycopg2 import OperationalError
 
 
 def wait_for_db(max_tries: int = 10):
@@ -60,3 +63,36 @@ def verify_password(store_pass, new_pass: str):
 
 def random_str(num: int):
     return "".join(random.choices(string.ascii_uppercase + string.digits, k=num))
+
+
+def generate_jwt_token(user: User):
+    """Generate JWT token."""
+    payload = {
+        "id": user.id,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+    }
+    secret = os.environ.get("JWT_SECRET")
+    return jwt.encode(payload, secret, algorithm="HS256")
+
+
+def verify_jwt_token(token):
+    """Verify JWT token."""
+    secret = os.environ.get("JWT_SECRET")
+    return jwt.decode(token, secret, algorithms=["HS256"])
+
+
+def get_user_from_request(request):
+    """Get user from request."""
+    token = request.headers.get("Authorization")
+    if token:
+        token = token.split(" ")[1]
+        payload = verify_jwt_token(token)
+        return UserRepo().get(payload["id"])
+
+    return None
+
+
+def get_general_response(data=[], success=True, message="", status=200):
+    return {"success": success, "message": message, "data": data}, status
