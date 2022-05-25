@@ -12,8 +12,11 @@ sealed class AuthenticationEvent {
 
     class LastNameChanged(val lastName: String): AuthenticationEvent()
 
+    class SetError(val error: String): AuthenticationEvent()
+
     object Authenticate: AuthenticationEvent()
 
     object ErrorDismissed: AuthenticationEvent()
 
+    object ClearAuthResponse: AuthenticationEvent()
 }

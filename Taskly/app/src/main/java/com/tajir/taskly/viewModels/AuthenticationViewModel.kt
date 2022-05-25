@@ -1,16 +1,21 @@
 package com.tajir.taskly.viewModels
 
+import androidx.compose.runtime.compositionLocalOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tajir.taskly.data.api.models.GeneralResponseAuth
+import com.tajir.taskly.data.api.models.Login
+import com.tajir.taskly.data.api.repository.AuthRepository
+import com.tajir.taskly.data.api.models.Register
 import com.tajir.taskly.data.models.AuthenticationMode
 import com.tajir.taskly.data.models.AuthenticationState
 import com.tajir.taskly.data.models.PasswordRequirement
 import com.tajir.taskly.events.AuthenticationEvent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import retrofit2.Response
+import java.lang.Exception
 
 
 class AuthenticationViewModel : ViewModel() {
@@ -37,6 +42,12 @@ class AuthenticationViewModel : ViewModel() {
         )
     }
 
+    private fun updateAuthResponse(res: Response<GeneralResponseAuth>) {
+        uiState.value = uiState.value.copy(
+            authResponse = res
+        )
+    }
+
     private fun updatePassword(password: String) {
         dismissError()
         val requirements = mutableListOf<PasswordRequirement>()
@@ -60,16 +71,50 @@ class AuthenticationViewModel : ViewModel() {
             isLoading = true
         )
 
-        // trigger network request
-        viewModelScope.launch(Dispatchers.IO) {
-            delay(2000L)
+        if(uiState.value.authenticationMode == AuthenticationMode.SIGN_UP) {
+            register()
+        } else {
+            login()
+        }
+        uiState.value = uiState.value.copy(
+            isLoading = false
+        )
+    }
 
-            withContext(Dispatchers.Main) {
-                uiState.value = uiState.value.copy(
-                    isLoading = false,
-                    error = "Something went wrong!"
-                )
+    private fun register() {
+        val data = Register(
+            first_name = uiState.value.first_name ?: "",
+            last_name = uiState.value.last_name ?: "",
+            email = uiState.value.email ?: "",
+            password = uiState.value.password ?: ""
+        )
+        val repo = AuthRepository()
+        viewModelScope.launch {
+            try {
+                val res = repo.register(data=data)
+                updateAuthResponse(res)
             }
+            catch (e : Exception) {
+                setError("Check Your Internet Connection.")
+            }
+        }
+    }
+
+    private fun login() {
+        val data = Login(
+            email = uiState.value.email ?: "",
+            password = uiState.value.password ?: ""
+        )
+        val repo = AuthRepository()
+        viewModelScope.launch {
+            try {
+                val res = repo.login(data=data)
+                updateAuthResponse(res)
+            }
+            catch (e : Exception) {
+                setError("Check Your Internet Connection.")
+            }
+
         }
     }
 
@@ -82,6 +127,12 @@ class AuthenticationViewModel : ViewModel() {
     private fun setError(err : String) {
         uiState.value = uiState.value.copy(
             error = err
+        )
+    }
+
+    private fun clearAuthResponse() {
+        uiState.value = uiState.value.copy(
+            authResponse = null
         )
     }
 
@@ -108,6 +159,12 @@ class AuthenticationViewModel : ViewModel() {
             is AuthenticationEvent.ErrorDismissed -> {
                 dismissError()
             }
+            is AuthenticationEvent.ClearAuthResponse -> {
+                clearAuthResponse()
+            }
+            is AuthenticationEvent.SetError -> {
+                setError(authenticationEvent.error)
+            }
         }
     }
 
@@ -126,3 +183,5 @@ class AuthenticationViewModel : ViewModel() {
         )
     }
 }
+
+val AuthState = compositionLocalOf<AuthenticationViewModel> { error("Authentication Context not found.") }

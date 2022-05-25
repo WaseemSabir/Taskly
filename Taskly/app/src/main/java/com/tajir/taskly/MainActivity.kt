@@ -13,13 +13,17 @@ import com.tajir.taskly.viewModels.UserStateViewModel
 import com.tajir.taskly.viewModels.UserState
 import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
+import com.tajir.taskly.viewModels.AuthState
+import com.tajir.taskly.viewModels.AuthenticationViewModel
 
 class MainActivity : ComponentActivity() {
     private val userState by viewModels<UserStateViewModel>()
+    private val authState by viewModels<AuthenticationViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CompositionLocalProvider(UserState provides userState) {
+            CompositionLocalProvider(UserState provides userState, AuthState provides authState) {
                 TasklyTheme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
