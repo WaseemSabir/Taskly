@@ -57,3 +57,9 @@ jobs:
           POSTGRES_DB_NAME_TEST: "postgres"
           POSTGRES_CONNECTION_TIMEOUT_TEST: 10
           TESTING: "True"
+          POSTGRES_DB_NAME: sample
+          POSTGRES_USER: sample
+          POSTGRES_PASSWORD: sample
+          POSTGRES_HOST: db
+          POSTGRES_PORT: 5432
+          POSTGRES_CONNECTION_TIMEOUT: 10
