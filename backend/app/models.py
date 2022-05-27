@@ -35,6 +35,3 @@ class TodoItem:
 
         if self.status == "completed" and not self.completed_at:
             self.completed_at = datetime.now()
-
-        if self.due_by < datetime.now():
-            raise ValueError(f"Due by date must be in the future!")
