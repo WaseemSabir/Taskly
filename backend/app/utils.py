@@ -100,8 +100,17 @@ def get_user_from_request(request):
     return None
 
 
-def get_general_response(data=[], success=True, message="", status=200):
+def make_general_response(data=[], success=True, message="", status=200):
     if type(data) == dict:
         data = [data]
-    
+
     return {"success": success, "message": message, "data": data}, status
+
+
+def make_user_dict(user : User):
+    return {
+        "id": user.id,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+    }

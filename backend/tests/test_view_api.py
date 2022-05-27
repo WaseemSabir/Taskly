@@ -4,6 +4,7 @@ Tests all the API views of the application.
 from tests.fixtures import *
 from flask import json
 from app.persist import TodoRepo
+from app.exceptions import NotFound
 
 
 def test_register(set_testing_env, client, user_factory):
@@ -47,8 +48,8 @@ def test_duplicate_email_not_allowed(set_testing_env, client, user_factory):
     data = json.loads(response.get_data(as_text=True)).get("data")
     msg = json.loads(response.get_data(as_text=True)).get("message")
 
-    assert response.status_code == 400
-    assert msg == "User already exists"
+    assert response.status_code == 409
+    assert msg == "User already exists."
     assert not data
 
 
@@ -180,8 +181,8 @@ def test_delete_todo_api(set_testing_env, client, register_user_factory, todo_fa
     assert response.status_code == 200
     assert msg == "Task Deleted."
 
-    still_exist = todo_repo.get(id=todo.id)
-    assert not still_exist
+    with pytest.raises(NotFound):
+        todo_repo.get(id=todo.id)
 
 
 def test_task_list_api(set_testing_env, client, register_user_factory, todo_factory):
