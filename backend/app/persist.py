@@ -1,20 +1,28 @@
+from abc import abstractmethod, ABC
+
+from psycopg2 import IntegrityError
+from app.exceptions import AlreadyExists, NotFound
 from app.models import User, TodoItem
 from app.database import Database
 
 
-class Repository:
+class Repository(ABC):
     def __init__(self, tablename):
         self.tablename = tablename
 
+    @abstractmethod
     def get(self, id):
         pass
 
+    @abstractmethod
     def create(self, model):
         pass
 
+    @abstractmethod
     def update(self, id, model):
         pass
 
+    @abstractmethod
     def delete(self, id):
         pass
 
@@ -26,19 +34,20 @@ class UserRepo(Repository):
     def get(self, id) -> User:
         with Database() as db:
             with db.cursor() as curs:
-                sql = f'SELECT * FROM "{self.tablename}" WHERE "id" = %s'
+                sql = f'select * from "{self.tablename}" where "id" = %s'
                 curs.execute(sql, (id,))
                 result = curs.fetchone()
                 if result:
                     return User(*result)
-                return None
+                else:
+                    raise NotFound(key_name="User")
 
-    def create(self, model: User) -> tuple:
+    def create(self, model: User) -> User:
         try:
             with Database() as db:
                 with db.cursor() as curs:
 
-                    sql = f'INSERT INTO "{self.tablename}" (id, first_name, last_name, email, password) VALUES (%s, %s, %s, %s, %s)'
+                    sql = f'insert into "{self.tablename}" (id, first_name, last_name, email, password) values (%s, %s, %s, %s, %s)'
                     curs.execute(
                         sql,
                         (
@@ -51,19 +60,18 @@ class UserRepo(Repository):
                     )
                     db.commit()
 
-            return self.get(model.id), ""
+            return self.get(model.id)
+        except IntegrityError:
+            raise AlreadyExists(key_name="User")
         except Exception as e:
             detailStr = str(e).split(":")[1]
-            if "exists" in detailStr.lower():
-                return None, "User already exists"
-            
-            return None, detailStr
+            raise Exception(detailStr)
 
-    def update(self, id, model: User) -> tuple:
+    def update(self, id, model: User) -> User:
         try:
             with Database() as db:
                 with db.cursor() as curs:
-                    sql = f'UPDATE "{self.tablename}" SET first_name = %s, last_name = %s, email = %s, password = %s WHERE "id" = %s'
+                    sql = f'update "{self.tablename}" set first_name = %s, last_name = %s, email = %s, password = %s WHERE "id" = %s'
                     curs.execute(
                         sql,
                         (
@@ -76,32 +84,30 @@ class UserRepo(Repository):
                     )
                     db.commit()
 
-            return self.get(id), ""
+            return self.get(id)
+        except IntegrityError:
+            raise AlreadyExists(key_name="User")
         except Exception as e:
             detailStr = str(e).split(":")[1]
-            return None, detailStr
+            raise Exception(detailStr)
 
-    def delete(self, id) -> bool:
-        try:
-            with Database() as db:
-                with db.cursor() as curs:
-                    sql = f'DELETE FROM "{self.tablename}" WHERE "id" = %s'
-                    curs.execute(sql, (id,))
-                    db.commit()
-
-            return True
-        except:
-            return False
+    def delete(self, id):
+        with Database() as db:
+            with db.cursor() as curs:
+                sql = f'delete from "{self.tablename}" where "id" = %s'
+                curs.execute(sql, (id,))
+                db.commit()
 
     def filter_by_email(self, email) -> User:
         with Database() as db:
             with db.cursor() as curs:
-                sql = f'SELECT * FROM "{self.tablename}" WHERE "email" = %s'
+                sql = f'select id from "{self.tablename}" where "email" = %s'
                 curs.execute(sql, (email,))
                 result = curs.fetchone()
                 if result:
-                    return User(*result)
-                return None
+                    return self.get(id=result[0])
+                else:
+                    raise NotFound(key_name="User with This Email")
 
 
 class TodoRepo(Repository):
@@ -112,18 +118,19 @@ class TodoRepo(Repository):
         with Database() as db:
             with db.cursor() as curs:
 
-                sql = f"SELECT * FROM {self.tablename} WHERE id = %s"
+                sql = f"select * from {self.tablename} where id = %s"
                 curs.execute(sql, (id,))
                 result = curs.fetchone()
                 if result:
                     return TodoItem(*result)
-                return None
+                else:
+                    raise NotFound(key_name="Todo")
 
-    def create(self, model: TodoItem) -> tuple:
+    def create(self, model: TodoItem) -> TodoItem:
         try:
             with Database() as db:
                 with db.cursor() as curs:
-                    sql = f"INSERT INTO {self.tablename} (id, title, description, due_by, user_id, status, completed_at, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                    sql = f"insert into {self.tablename} (id, title, description, due_by, user_id, status, completed_at, created_at) values (%s, %s, %s, %s, %s, %s, %s, %s)"
                     curs.execute(
                         sql,
                         (
@@ -139,16 +146,18 @@ class TodoRepo(Repository):
                     )
                     db.commit()
 
-            return self.get(model.id), ""
+            return self.get(model.id)
+        except IntegrityError:
+            raise AlreadyExists(key_name="Todo")
         except Exception as e:
             detailStr = str(e).split(":")[1]
-            return None, detailStr
+            raise Exception(detailStr)
 
-    def update(self, id, model: TodoItem) -> tuple:
+    def update(self, id, model: TodoItem) -> TodoItem:
         try:
             with Database() as db:
                 with db.cursor() as curs:
-                    sql = f"UPDATE {self.tablename} SET title = %s, description = %s, due_by = %s, user_id = %s, status = %s, completed_at = %s WHERE id = %s"
+                    sql = f"update {self.tablename} set title = %s, description = %s, due_by = %s, user_id = %s, status = %s, completed_at = %s where id = %s"
                     curs.execute(
                         sql,
                         (
@@ -163,31 +172,27 @@ class TodoRepo(Repository):
                     )
                     db.commit()
 
-            return self.get(id), ""
+            return self.get(id)
+        except IntegrityError:
+            raise AlreadyExists(key_name="Todo")
         except Exception as e:
             detailStr = str(e).split(":")[1]
-            return None, detailStr
+            raise Exception(detailStr)
 
-    def delete(self, id) -> bool:
-        try:
-            with Database() as db:
-                with db.cursor() as curs:
-                    sql = f"DELETE FROM {self.tablename} WHERE id = %s"
-                    curs.execute(sql, (id,))
-                    db.commit()
-
-            return True
-
-        except:
-            return False
+    def delete(self, id):
+        with Database() as db:
+            with db.cursor() as curs:
+                sql = f"delete from {self.tablename} where id = %s"
+                curs.execute(sql, (id,))
+                db.commit()
 
     def user_tasks_list(self, user_id) -> list:
         with Database() as db:
             with db.cursor() as curs:
-                sql = f"SELECT * FROM {self.tablename} WHERE user_id = %s"
+                sql = f"select id from {self.tablename} where user_id = %s"
                 curs.execute(sql, (user_id,))
                 result = curs.fetchall()
                 if result:
-                    return [TodoItem(*one) for one in result]
+                    return [self.get(one[0]) for one in result]
 
                 return []

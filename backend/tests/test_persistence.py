@@ -4,6 +4,19 @@ Implements the tests for all persistence classes.
 from app.persist import TodoRepo, UserRepo
 from app.utils import verify_password, hash_password
 from tests.fixtures import *
+from app.database import Database
+from app.exceptions import *
+
+
+def test_env_settings():
+    """
+    tests if enviorment is set properly
+    """
+    try:
+        db_config = Database._get_args()
+        test_config = Database._get_test_args()
+    except EnviormentNotSet as e:
+        assert False, e.message
 
 
 def test_user_creation(set_testing_env, user_factory):
@@ -12,9 +25,16 @@ def test_user_creation(set_testing_env, user_factory):
     """
     user = user_factory
     user_repo = UserRepo()
-    user_repo.create(user)
 
-    user_from_db = user_repo.get(user.id)
+    try:
+        user_repo.create(user)
+    except AlreadyExists:
+        pass
+
+    try:
+        user_from_db = user_repo.get(user.id)
+    except NotFound as e:
+        assert False, e.message
 
     assert user_from_db.first_name == user.first_name
     assert user_from_db.last_name == user.last_name
@@ -59,10 +79,31 @@ def test_user_deletion(set_testing_env, user_factory):
     user_repo = UserRepo()
     user_repo.create(user)
 
-    user_repo.delete(user.id)
-    user_from_db = user_repo.get(user.id)
-    assert not user_from_db
+    try:
+        user_repo.delete(user.id)
+    except:
+        assert False, "User deletion failed"
 
+    with pytest.raises(NotFound):
+        user_repo.get(user.id)
+
+
+def test_filter_by_email(set_testing_env, user_factory):
+    """
+    Tests the filter by email feature in User Repo.
+    """
+    user = user_factory
+    user_repo = UserRepo()
+    user_repo.create(user)
+    try:
+        user_from_db = user_repo.filter_by_email(user.email)
+    except NotFound:
+        assert False, "User not found"
+    
+    assert user_from_db.first_name == user.first_name
+    assert user_from_db.last_name == user.last_name
+    assert user_from_db.email == user.email
+    
 
 def test_todo_creation(set_testing_env, todo_factory):
     """
@@ -72,7 +113,10 @@ def test_todo_creation(set_testing_env, todo_factory):
     todo_repo = TodoRepo()
     todo_repo.create(todo)
 
-    todo_from_db = todo_repo.get(todo.id)
+    try:
+        todo_from_db = todo_repo.get(todo.id)
+    except NotFound as e:
+        assert False, e.message
 
     assert todo_from_db.title == todo.title
     assert todo_from_db.description == todo.description
@@ -103,6 +147,29 @@ def test_todo_deletion(set_testing_env, todo_factory):
     todo_repo = TodoRepo()
     todo_repo.create(todo)
 
-    todo_repo.delete(todo.id)
-    todo_from_db = todo_repo.get(todo.id)
-    assert not todo_from_db
+    try:
+        todo_repo.delete(todo.id)
+    except:
+        assert False, "Todo deletion failed"
+    
+    with pytest.raises(NotFound):
+        todo_repo.get(todo.id)
+
+
+def test_todo_user_task_list(set_testing_env, todo_factory):
+    """
+    Tests the todo user task list feature in Todo Repo.
+    """
+    todo = todo_factory
+    todo_repo = TodoRepo()
+    todo_repo.create(todo)
+
+    try:
+        data = todo_repo.user_tasks_list(todo.user_id)
+    except NotFound as e:
+        assert False, e.message
+
+    todo_from_db = data[0]
+    assert todo_from_db.title == todo.title
+    assert todo_from_db.description == todo.description
+    assert todo_from_db.status == todo.status

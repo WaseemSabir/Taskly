@@ -8,10 +8,18 @@ from app.persist import UserRepo
 import hashlib
 import string
 import random
+import time
+from app.database import Database
+from psycopg2 import OperationalError
+import uuid
 
 
 def wait_for_db(max_tries: int = 10):
-    """Waits for postgres database to connect."""
+    """
+    Waits for postgres database to connect.
+
+    Source: Tajir codebase python-flex
+    """
     retry_count = 0
     max_retry_count = max_tries
     while retry_count < max_retry_count:
@@ -32,8 +40,6 @@ def wait_for_db(max_tries: int = 10):
 
 def generate_id():
     """Generates a random id."""
-    import uuid
-
     return str(uuid.uuid4())
 
 
