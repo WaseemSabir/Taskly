@@ -5,6 +5,7 @@ import random
 import time
 from app.database import Database
 from psycopg2 import OperationalError
+import uuid
 
 
 def wait_for_db(max_tries: int = 10):
@@ -29,8 +30,6 @@ def wait_for_db(max_tries: int = 10):
 
 def generate_id():
     """Generates a random id."""
-    import uuid
-
     return str(uuid.uuid4())
 
 

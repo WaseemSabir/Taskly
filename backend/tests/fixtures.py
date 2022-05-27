@@ -3,6 +3,7 @@ Implements fixtures for tests.
 """
 import pytest
 from random import choice
+from app.exceptions import AlreadyExists
 from app.models import User, TodoItem
 from app.utils import generate_id, random_str
 from app.database import Database
@@ -50,7 +51,11 @@ def todo_factory(user_factory) -> TodoItem:
     Also, for user id, it uses the user_factory fixture and saves the user in database.
     """
     user = user_factory
-    UserRepo().create(user)
+
+    try:
+        UserRepo().create(user)
+    except AlreadyExists:
+        user = UserRepo().filter_by_email(email=user.email)
 
     todo = TodoItem(
         id=generate_id(),

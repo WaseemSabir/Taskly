@@ -3,10 +3,15 @@ Implements default database connection class.
 """
 import os
 from psycopg2 import connect as db_connect
-
+from app.exceptions import EnviormentNotSet
 
 class Database:
-    """Database class."""
+    """
+    Database class.
+
+    Source:
+    Some of code take from Tajir Python Flex repo.
+    """
 
     def __init__(self):
         """Initialize database."""
@@ -29,7 +34,7 @@ class Database:
     @staticmethod
     def _get_args() -> dict:
         """Get database connection arguments from enviorment."""
-        return {
+        data = {
             "dbname": os.environ.get("POSTGRES_DB_NAME"),
             "user": os.environ.get("POSTGRES_USER"),
             "password": os.environ.get("POSTGRES_PASSWORD"),
@@ -38,10 +43,15 @@ class Database:
             "connect_timeout": os.environ.get("POSTGRES_CONNECTION_TIMEOUT"),
         }
 
+        if not all(data.values()):
+            raise EnviormentNotSet
+
+        return data
+
     @staticmethod
     def _get_test_args() -> dict:
         """Get TEST database connection arguments from enviorment."""
-        return {
+        data = {
             "dbname": os.environ.get("POSTGRES_DB_NAME_TEST"),
             "user": os.environ.get("POSTGRES_USER_TEST"),
             "password": os.environ.get("POSTGRES_PASSWORD_TEST"),
@@ -50,7 +60,13 @@ class Database:
             "connect_timeout": os.environ.get("POSTGRES_CONNECTION_TIMEOUT_TEST"),
         }
 
+        if not all(data.values()):
+            raise EnviormentNotSet
+
+        return data
+
     def _get_args_by_env(self) -> dict:
+        # Checks if Enviorment is testing or not, Used in set_env fixture in testing
         test = os.environ.get("TESTING")
         if test and test.lower() == "true":
             args = self._get_test_args()
@@ -86,14 +102,20 @@ class Database:
         return cursor
 
     def migrate(self):
-        """Run migrations."""
+        """
+        Run migrations.
+        """
         cur_dir = os.getcwd()
+
+        # if current directory is tests
         if cur_dir.split("/")[-1] == "tests":
             os.chdir("..")
 
+        # go into migrations directory
         if "migrations" in os.listdir():
             os.chdir("migrations")
 
+        # get enviorment variables and run migrations
         args = self._get_args_by_env()
         os.system(
             f'pg-migrator postgres://{args.get("user")}:{args.get("password")}@{args.get("host")}:{args.get("port")}/{args.get("dbname")} > /dev/null'
