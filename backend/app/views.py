@@ -242,7 +242,7 @@ def update_task_view(task_id):
         description = data.get("description")
 
         due = data.get("due_by")
-        due_by = datetime.strptime(due, "%b %d %Y %I:%M%p") if due else None
+        due_by = datetime.strptime(due, "%Y-%m-%d %H:%M") if due else None
         status = data.get("status")
 
         try:
@@ -269,6 +269,7 @@ def update_task_view(task_id):
 
         return utils.make_general_response(data=task.__dict__)
     except Exception as e:
+        print(e)
         return utils.make_general_response(success=False, message=str(e), status=500)
 
 
