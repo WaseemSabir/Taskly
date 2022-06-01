@@ -1,10 +1,10 @@
-package com.tajir.taskly.ui.components
+package com.tajir.taskly.ui.components.authentication
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.tajir.taskly.data.models.PasswordRequirement
+import com.tajir.taskly.data.stateModels.PasswordRequirement
 
 @Composable
 fun PasswordRequirements(

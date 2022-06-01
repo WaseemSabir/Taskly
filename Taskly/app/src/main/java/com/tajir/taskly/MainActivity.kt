@@ -9,21 +9,23 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.tajir.taskly.ui.theme.TasklyTheme
 import com.tajir.taskly.navigation.NavigationRoutes
-import com.tajir.taskly.viewModels.UserStateViewModel
-import com.tajir.taskly.viewModels.UserState
 import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
-import com.tajir.taskly.viewModels.AuthState
-import com.tajir.taskly.viewModels.AuthenticationViewModel
+import com.tajir.taskly.viewModels.*
 
 class MainActivity : ComponentActivity() {
     private val userState by viewModels<UserStateViewModel>()
     private val authState by viewModels<AuthenticationViewModel>()
+    private val taskState by viewModels<TaskStateViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CompositionLocalProvider(UserState provides userState, AuthState provides authState) {
+            CompositionLocalProvider(
+                UserState provides userState,
+                AuthState provides authState,
+                TaskState provides taskState
+            ) {
                 TasklyTheme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),

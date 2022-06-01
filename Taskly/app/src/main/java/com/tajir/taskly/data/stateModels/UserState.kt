@@ -1,4 +1,4 @@
-package com.tajir.taskly.data.models
+package com.tajir.taskly.data.stateModels
 
 data class UserState(
     val first_name: String? = null,

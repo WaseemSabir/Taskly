@@ -1,4 +1,4 @@
-package com.tajir.taskly.ui.components
+package com.tajir.taskly.ui.components.authentication
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.tajir.taskly.R
-import com.tajir.taskly.data.models.AuthenticationMode
+import com.tajir.taskly.data.stateModels.AuthenticationMode
 
 @Composable
 fun AuthenticationTitle(

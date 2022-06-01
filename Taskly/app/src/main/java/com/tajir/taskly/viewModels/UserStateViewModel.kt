@@ -1,11 +1,12 @@
 package com.tajir.taskly.viewModels
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tajir.taskly.data.api.models.User
 import com.tajir.taskly.data.api.repository.UserRepository
-import com.tajir.taskly.data.models.UserState
+import com.tajir.taskly.data.stateModels.UserState
 import com.tajir.taskly.events.UserEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class UserStateViewModel : ViewModel() {
             val body = res.body()
 
             if (body != null) {
-                val data : User = body.data[0]!!
+                val data: User = body.data[0]!!
                 userState.value = userState.value.copy(
                     first_name = data.first_name,
                     last_name = data.last_name,
@@ -34,15 +35,25 @@ class UserStateViewModel : ViewModel() {
         }
     }
 
-    private fun updateToken(token : String) {
+    private fun updateToken(token: String?) {
         userState.value = userState.value.copy(
             token = token
         )
     }
 
-    private fun setLoading(loading : Boolean) {
+    private fun setLoading(loading: Boolean) {
         userState.value = userState.value.copy(
             loading = loading
+        )
+    }
+
+    private fun clearState() {
+        userState.value = userState.value.copy(
+            first_name = null,
+            last_name = null,
+            email = null,
+            token = null,
+            loading = false
         )
     }
 
@@ -52,8 +63,11 @@ class UserStateViewModel : ViewModel() {
                 updateToken(userEvent.token)
                 fetchUser()
             }
+            is UserEvent.Logout -> {
+                clearState()
+            }
         }
     }
 }
 
-val UserState = compositionLocalOf<UserStateViewModel> { error("User State Context Not Found!") }
+val UserState by lazy { compositionLocalOf<UserStateViewModel> { error("User State Context Not Found!") } }

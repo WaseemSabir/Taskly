@@ -37,17 +37,22 @@ fun SplashScreen(navController: NavController) {
                 })
         )
         delay(2000L)
-        if(!currUserState.isLoggedIn()) {
+
+        if (!currUserState.isLoggedIn()) {
             navController.navigate("login_screen")
         } else {
-            navController.navigate("main_screen")
+            navController.navigate("home_screen")
         }
     }
 
-    Box(contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()) {
-        Image(painter = painterResource(id = R.drawable.logo),
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo",
-            modifier = Modifier.scale(scale.value))
+            modifier = Modifier.scale(scale.value)
+        )
     }
 }

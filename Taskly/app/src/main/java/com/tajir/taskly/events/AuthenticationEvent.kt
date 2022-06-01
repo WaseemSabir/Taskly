@@ -19,4 +19,6 @@ sealed class AuthenticationEvent {
     object ErrorDismissed: AuthenticationEvent()
 
     object ClearAuthResponse: AuthenticationEvent()
+
+    object Logout: AuthenticationEvent()
 }
