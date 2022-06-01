@@ -5,10 +5,13 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -19,15 +22,12 @@ import com.tajir.taskly.R
 import com.tajir.taskly.data.stateModels.TaskState
 import com.tajir.taskly.events.TaskEvent
 import com.tajir.taskly.ui.components.BottomNavigationBar
-import com.tajir.taskly.ui.components.home.FloatingButtonHome
-import com.tajir.taskly.ui.components.home.HomeContent
-import com.tajir.taskly.ui.components.home.HomeTopBar
-import com.tajir.taskly.ui.components.home.TaskCreateDialog
 import com.tajir.taskly.viewModels.AuthState
 import com.tajir.taskly.viewModels.TaskState
 import com.tajir.taskly.viewModels.UserState
 import kotlinx.coroutines.launch
 import com.tajir.taskly.navigation.NavigationItem.Search
+import com.tajir.taskly.ui.components.home.*
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -92,14 +92,19 @@ fun HomeScreen(
 
     // wait for user and data to load
     if (user.loading || task.loading) {
-        CircularProgressIndicator()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator()
+        }
     } else {
         val navBackground = Color(0xFF1976D2)
         Scaffold(
             topBar = {
-                HomeTopBar(
+                GenericTopBar(
                     onSearchClick = {
-                           navController.navigate(Search.route)
+                        navController.navigate(Search.route)
                     },
                     onRefreshClick = {
                         taskState.handleEvent(
@@ -109,7 +114,8 @@ fun HomeScreen(
                     onLogoutClick = {
                         navController.navigate("login_screen")
                     },
-                    backgroundColor = Color(0x009FB7)
+                    backgroundColor = Color(0x009FB7),
+                    title = "My Tasks"
                 )
             },
             floatingActionButtonPosition = FabPosition.End,
@@ -126,7 +132,7 @@ fun HomeScreen(
             content = { padding ->
                 Box(modifier = Modifier.padding(padding)) {
                     HomeContent(
-                        tasks = task.tasks,
+                        tks = task.tasks,
                         handleEvent = taskState::handleEvent,
                         navController = navController,
                         taskParse = taskState::parseTask

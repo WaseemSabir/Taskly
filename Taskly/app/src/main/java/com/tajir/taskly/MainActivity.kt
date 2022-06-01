@@ -1,5 +1,6 @@
 package com.tajir.taskly
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import com.tajir.taskly.ui.theme.TasklyTheme
 import com.tajir.taskly.navigation.NavigationRoutes
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.CompositionLocalProvider
 import com.tajir.taskly.viewModels.*
 
@@ -18,6 +20,7 @@ class MainActivity : ComponentActivity() {
     private val authState by viewModels<AuthenticationViewModel>()
     private val taskState by viewModels<TaskStateViewModel>()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

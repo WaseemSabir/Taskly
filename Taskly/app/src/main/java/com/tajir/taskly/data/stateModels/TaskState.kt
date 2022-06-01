@@ -1,5 +1,7 @@
 package com.tajir.taskly.data.stateModels
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.tajir.taskly.data.api.models.Task
 import com.tajir.taskly.data.api.models.TaskParsed
 import java.time.LocalDateTime
@@ -15,9 +17,10 @@ data class TaskState constructor(
     val dueDate: LocalDateTime? = null,
     val msg: String? = null
 ) {
+    @RequiresApi(Build.VERSION_CODES.O)
     fun isSelectedTaskCreateValid() : Boolean {
-        if(title != null && desc != null) {
-            return title.isNotEmpty() && desc.isNotEmpty()
+        if(title != null && desc != null && dueDate != null) {
+            return title.isNotEmpty() && desc.isNotEmpty() && dueDate.isAfter(LocalDateTime.now())
         }
 
         return false

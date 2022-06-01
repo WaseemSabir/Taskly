@@ -12,7 +12,7 @@ interface UserInterface {
     @PUT(ApiConstants.USER_ENDPOINT)
     suspend fun edit(
         @Header("Authorization") auth : String,
-        @Body data : UserWithPassword
+        @Body data : User
     ): Response<GeneralResponseUser>
 
     @DELETE(ApiConstants.USER_ENDPOINT)

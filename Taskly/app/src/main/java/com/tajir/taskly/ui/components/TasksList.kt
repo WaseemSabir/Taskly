@@ -19,15 +19,18 @@ fun TaskList(
     tasks: List<Task?>,
     handleEvent: (event: TaskEvent) -> Unit,
     navController: NavController,
-    labelText: String
+    labelText: String? = null,
+    modifier: Modifier = Modifier.padding(vertical = 8.dp)
 ) {
 
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        Text(
-            text = labelText,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-            color = Color.DarkGray
-        )
+    Column(modifier = modifier) {
+        if(labelText!=null) {
+            Text(
+                text = labelText,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                color = Color.DarkGray
+            )
+        }
         if (tasks.isEmpty()) {
             Row(horizontalArrangement = Arrangement.Center) {
                 Text(
