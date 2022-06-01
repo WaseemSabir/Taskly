@@ -85,7 +85,8 @@ fun TaskScreen(
                         handleEvent = taskModel::handleEvent,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 10.dp, vertical = 2.dp)
+                            .padding(horizontal = 10.dp, vertical = 2.dp),
+                        navController = navController
                     )
                 }
             },

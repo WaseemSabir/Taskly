@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.tajir.taskly.events.TaskEvent
 import com.tajir.taskly.ui.components.home.OutlinedInputField
 import com.tajir.taskly.viewModels.TaskState
@@ -26,7 +27,8 @@ fun TaskContent(
     isEdit: Boolean,
     editChanged: () -> Unit,
     handleEvent: (event: TaskEvent) -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    navController: NavController
 ) {
     val context = LocalContext.current
 
@@ -188,6 +190,7 @@ fun TaskContent(
                          handleEvent(
                              TaskEvent.DeleteTaskByID(currTask.id)
                          )
+                        navController.popBackStack()
                     },
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(
