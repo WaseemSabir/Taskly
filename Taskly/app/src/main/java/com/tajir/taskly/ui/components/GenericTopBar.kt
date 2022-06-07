@@ -18,18 +18,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HomeTopBar(
+fun GenericTopBar(
     onSearchClick : () -> Unit,
     onRefreshClick : () -> Unit,
     onLogoutClick : () -> Unit,
-    backgroundColor: Color
+    backgroundColor: Color,
+    title: String
 ){
     Row(
         modifier = Modifier.fillMaxWidth().background(backgroundColor),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "My Tasks",
+            text = title,
             modifier = Modifier.padding(16.dp),
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp

@@ -1,6 +1,5 @@
 package com.tajir.taskly.viewModels
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -47,6 +46,24 @@ class UserStateViewModel : ViewModel() {
         )
     }
 
+    private fun setFirstName(fname: String) {
+        userState.value = userState.value.copy(
+            first_name = fname
+        )
+    }
+
+    private fun setLastName(lname: String) {
+        userState.value = userState.value.copy(
+            last_name = lname
+        )
+    }
+
+    private fun setEmail(email: String) {
+        userState.value = userState.value.copy(
+            email = email
+        )
+    }
+
     private fun clearState() {
         userState.value = userState.value.copy(
             first_name = null,
@@ -57,6 +74,60 @@ class UserStateViewModel : ViewModel() {
         )
     }
 
+    private fun setMsg(msg: String) {
+        userState.value = userState.value.copy(
+            msg = msg
+        )
+    }
+
+    private fun dismissMsg() {
+        userState.value = userState.value.copy(
+            msg = null
+        )
+    }
+
+    private fun updateUserHandler() {
+        val currUser = User(
+            first_name = userState.value.first_name ?: "",
+            last_name = userState.value.last_name ?: "",
+            email = userState.value.email ?: ""
+        )
+
+        if (userState.value.isUserUpdateValid()) {
+            val repo = UserRepository()
+
+            viewModelScope.launch {
+                try {
+                    val res = repo.edit(data = currUser, token = userState.value.token ?: "")
+
+                    val body = res.body()
+                    if (body == null || body.data.isEmpty()) {
+                        setMsg("User Update failed.")
+                    } else {
+                        setMsg("User Updated.")
+                    }
+                } catch (e: Exception) {
+                    setMsg("Check Your Internet Connection.")
+                }
+            }
+        } else {
+            setMsg("All fields are requited.")
+        }
+    }
+
+    fun userDeleteHandler() {
+        val repo = UserRepository()
+
+        viewModelScope.launch {
+            try {
+                val res = repo.remove(token = userState.value.token ?: "")
+                setMsg("User Deleted.")
+            } catch (e: Exception) {
+                setMsg("Check your internet connection.")
+            }
+        }
+    }
+
     fun handleEvent(userEvent: UserEvent) {
         when (userEvent) {
             is UserEvent.TokenChanged -> {
@@ -65,6 +136,27 @@ class UserStateViewModel : ViewModel() {
             }
             is UserEvent.Logout -> {
                 clearState()
+            }
+            is UserEvent.SetFirstName -> {
+                setFirstName(userEvent.fname)
+            }
+            is UserEvent.SetLastName -> {
+                setLastName(userEvent.lname)
+            }
+            is UserEvent.SetEmail -> {
+                setEmail(userEvent.email)
+            }
+            is UserEvent.UpdateUserCall -> {
+                updateUserHandler()
+            }
+            is UserEvent.DeleteUserCall -> {
+                userDeleteHandler()
+            }
+            is UserEvent.DismissMsg -> {
+                dismissMsg()
+            }
+            is UserEvent.SetMSg -> {
+                setMsg(userEvent.msg)
             }
         }
     }

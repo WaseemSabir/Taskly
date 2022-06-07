@@ -27,7 +27,11 @@ import java.time.format.DateTimeFormatter.*
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun selectDateTime(context: Context, dt : LocalDateTime, changedCallBack: (due_date : LocalDateTime) -> Unit) {
+fun selectDateTime(
+    context: Context,
+    dt: LocalDateTime,
+    changedCallBack: (due_date: LocalDateTime) -> Unit
+) {
 
     val startYear = dt.year
     val startMonth = dt.monthValue
@@ -40,26 +44,37 @@ fun selectDateTime(context: Context, dt : LocalDateTime, changedCallBack: (due_d
             val pickedDateTime = Calendar.getInstance()
             pickedDateTime.set(year, month, day, hour, minute)
 
-            val dt = LocalDateTime.ofInstant(pickedDateTime.toInstant(), pickedDateTime.timeZone.toZoneId())
+            val dt = LocalDateTime.ofInstant(
+                pickedDateTime.toInstant(),
+                pickedDateTime.timeZone.toZoneId()
+            )
             changedCallBack(dt)
         }, startHour, startMinute, false).show()
     }, startYear, startMonth, startDay).show()
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getStringFromDate(dt : LocalDateTime): String {
+fun getStringFromDate(dt: LocalDateTime): String {
     val dtNow = LocalDateTime.now()
     val today = dtNow.toLocalDate()
     val tomorrow = dtNow.toLocalDate().plus(1, ChronoUnit.DAYS)
-    val givenDate = dt.toLocalDate()
     val nextWeek = today.plus(1, ChronoUnit.WEEKS)
+    val yesterday = today.minus(1, ChronoUnit.DAYS)
+    val pastWeek = today.minus(1, ChronoUnit.WEEKS)
+
+    val givenDate = dt.toLocalDate()
 
     val time = dt.format(ofPattern("hh.mm a"))
-    val date : String = if(givenDate == today) {
+    val date: String = if (givenDate == today) {
         "Today"
-    } else if(tomorrow == givenDate) {
+    } else if (yesterday == givenDate) {
+        "Yesterday"
+    } else if (tomorrow == givenDate) {
         "Tomorrow"
-    } else if (today <= givenDate && givenDate < nextWeek){
+    } else if (yesterday>givenDate && givenDate > pastWeek) {
+        val dayName = dt.format(ofPattern("EEE"))
+        String.format("Past %s", dayName)
+    } else if (today <= givenDate && givenDate < nextWeek) {
         dt.format(ofPattern("EEE"))
     } else {
         dt.format(ofPattern("MMM dd"))
@@ -71,13 +86,13 @@ fun getStringFromDate(dt : LocalDateTime): String {
 @Composable
 fun CreateTaskForm(
     title: String?,
-    titleChanged: (title : String) -> Unit,
+    titleChanged: (title: String) -> Unit,
     description: String?,
-    descriptionChanged: (desc : String) -> Unit,
+    descriptionChanged: (desc: String) -> Unit,
     dueDate: LocalDateTime = LocalDateTime.now().with(LocalTime.MAX),
-    dueDateChanged: (due_date : LocalDateTime) -> Unit,
-    modifier : Modifier
-){
+    dueDateChanged: (due_date: LocalDateTime) -> Unit,
+    modifier: Modifier
+) {
     val context = LocalContext.current
 
     Box(modifier = modifier) {

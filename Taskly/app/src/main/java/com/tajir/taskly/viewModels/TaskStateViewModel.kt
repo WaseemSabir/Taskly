@@ -130,7 +130,7 @@ class TaskStateViewModel : ViewModel() {
 
         if (task != null) {
 
-            if(tasks.size>0) {
+            if (tasks.size > 0) {
                 for (i in 0 until tasks.size) {
                     val t = tasks[i]
                     if (t?.id == task.id) {
@@ -155,7 +155,7 @@ class TaskStateViewModel : ViewModel() {
         val tasks = taskState.value.tasks.toMutableList()
         var index: Int? = null
 
-        if(tasks.size>0) {
+        if (tasks.size > 0) {
             for (i in 0 until tasks.size) {
                 val t = tasks[i]
                 if (t?.id == id) {
@@ -181,7 +181,9 @@ class TaskStateViewModel : ViewModel() {
             val toCreate = TaskCreate(
                 title = taskState.value.title ?: "",
                 description = taskState.value.desc ?: "",
-                due_by = formatDatetime(taskState.value.dueDate ?: LocalDateTime.now().with(LocalTime.MAX))
+                due_by = formatDatetime(
+                    taskState.value.dueDate ?: LocalDateTime.now().with(LocalTime.MAX)
+                )
             )
 
             val taskRepo = TaskRepository()
@@ -217,7 +219,9 @@ class TaskStateViewModel : ViewModel() {
             val toUpdate = TaskUpdate(
                 title = taskState.value.title ?: "",
                 description = taskState.value.desc ?: "",
-                due_by = formatDatetime(taskState.value.dueDate ?: LocalDateTime.now().with(LocalTime.MAX)),
+                due_by = formatDatetime(
+                    taskState.value.dueDate ?: LocalDateTime.now().with(LocalTime.MAX)
+                ),
                 status = taskState.value.status ?: ""
             )
 
