@@ -5,11 +5,13 @@ import pytest
 from random import choice
 from app.exceptions import AlreadyExists
 from app.models import User, TodoItem
-from app.utils import generate_id, random_str
+from app.utils import generate_id, random_str, hash_password
 from app.database import Database
 from datetime import datetime, timedelta
 from app.persist import UserRepo
 import os
+from main import app
+from flask import json
 
 
 @pytest.fixture
@@ -22,21 +24,21 @@ def user_factory() -> User:
             id=generate_id(),
             first_name="John",
             last_name="Doe",
-            email=f"john_{random_str(3)}@email.com",
+            email=f"john_{random_str(5)}@email.com",
             password=random_str(10),
         ),
         User(
             id=generate_id(),
             first_name="Jane",
             last_name="Kelly",
-            email=f"janny_{random_str(3)}@gmail.com",
+            email=f"janny_{random_str(5)}@gmail.com",
             password=random_str(10),
         ),
         User(
             id=generate_id(),
             first_name="Waseem",
             last_name="Sabir",
-            email=f"waseem_{random_str(3)}@gmail.com",
+            email=f"waseem_{random_str(5)}@gmail.com",
             password=random_str(10),
         ),
     ]
@@ -81,3 +83,27 @@ def set_testing_env() -> None:
 
     yield
     os.environ["TESTING"] = "False"
+
+
+@pytest.fixture
+def client():
+    return app.test_client()
+
+
+@pytest.fixture
+def register_user_factory(user_factory, client):
+    """
+    get registred user and their token.
+    """
+    user = user_factory
+    us_pass = user.password
+    user.password = hash_password(user.password)
+    user_repo = UserRepo()
+    user_repo.create(user)
+
+    user.password = us_pass
+
+    response = client.post("/login", json={"email": user.email, "password": us_pass})
+    data = json.loads(response.get_data(as_text=True)).get("data")[0]
+
+    return user, data.get("token")

@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABC
+from datetime import datetime
 
 from psycopg2 import IntegrityError
 from app.exceptions import AlreadyExists, NotFound
@@ -127,6 +128,9 @@ class TodoRepo(Repository):
                     raise NotFound(key_name="Todo")
 
     def create(self, model: TodoItem) -> TodoItem:
+        if model.due_by < datetime.now():
+            raise Exception("Due by date must be in the future!")
+        
         try:
             with Database() as db:
                 with db.cursor() as curs:
