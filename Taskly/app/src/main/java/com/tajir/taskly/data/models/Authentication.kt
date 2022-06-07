@@ -2,6 +2,8 @@ package com.tajir.taskly.data.models
 
 import androidx.annotation.StringRes
 import com.tajir.taskly.R
+import com.tajir.taskly.data.api.models.GeneralResponseAuth
+import retrofit2.Response
 import kotlin.collections.List
 
 
@@ -25,6 +27,7 @@ data class AuthenticationState(
     val password: String? = null,
     val passwordRequirements: List<PasswordRequirement> = emptyList(),
     val isLoading: Boolean = false,
+    val authResponse: Response<GeneralResponseAuth>? = null,
     val error: String? = null
 ) {
     fun isFormValid(): Boolean {

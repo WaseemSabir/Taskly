@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.tajir.taskly.ui.screens.SplashScreen
 import com.tajir.taskly.ui.screens.AuthenticationScreen
+import com.tajir.taskly.ui.screens.MainScreen
 
 @Composable
 fun NavigationRoutes() {
@@ -16,7 +17,11 @@ fun NavigationRoutes() {
         }
 
         composable("login_screen") {
-            AuthenticationScreen()
+            AuthenticationScreen(navController = navController)
+        }
+
+        composable("main_screen") {
+            MainScreen(navController = navController)
         }
     }
 }

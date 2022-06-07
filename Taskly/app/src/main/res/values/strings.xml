@@ -18,4 +18,8 @@
     <string name="action_already_have_account">Already have an account?</string>
     <string name="label_first_name">First Name</string>
     <string name="label_last_name">Last Name</string>
+    <string name="email_exist_err">Email already exists.</string>
+    <string name="login_err">Invalid Credentials.</string>
+    <string name="net_err">Check Your Internet Connectivity.</string>
+    <string name="something_wrong_login">Something Went Wrong. Login Again!</string>
 </resources>

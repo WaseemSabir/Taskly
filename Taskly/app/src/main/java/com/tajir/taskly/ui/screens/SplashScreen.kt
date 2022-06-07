@@ -9,6 +9,7 @@ import android.view.animation.OvershootInterpolator
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -23,7 +24,7 @@ fun SplashScreen(navController: NavController) {
         androidx.compose.animation.core.Animatable(0f)
     }
 
-    val vm = UserState.current;
+    val currUserState = UserState.current.userState.collectAsState().value;
 
     // AnimationEffect
     LaunchedEffect(key1 = true) {
@@ -36,11 +37,11 @@ fun SplashScreen(navController: NavController) {
                 })
         )
         delay(2000L)
-
-        if(!vm.isLoggedIn) {
+        if(!currUserState.isLoggedIn()) {
             navController.navigate("login_screen")
+        } else {
+            navController.navigate("main_screen")
         }
-
     }
 
     Box(contentAlignment = Alignment.Center,
