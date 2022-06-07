@@ -1,4 +1,4 @@
-package com.tajir.taskly.ui.components
+package com.tajir.taskly.ui.components.authentication
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tajir.taskly.data.models.AuthenticationMode
-import com.tajir.taskly.data.models.PasswordRequirement
+import com.tajir.taskly.data.stateModels.AuthenticationMode
+import com.tajir.taskly.data.stateModels.PasswordRequirement
 import com.tajir.taskly.R
 
 @Composable

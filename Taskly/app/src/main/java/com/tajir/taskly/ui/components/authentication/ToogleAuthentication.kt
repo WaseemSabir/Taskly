@@ -1,4 +1,4 @@
-package com.tajir.taskly.ui.components
+package com.tajir.taskly.ui.components.authentication
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tajir.taskly.R
-import com.tajir.taskly.data.models.AuthenticationMode
+import com.tajir.taskly.data.stateModels.AuthenticationMode
 
 @Composable
 fun ToggleAuthenticationMode(

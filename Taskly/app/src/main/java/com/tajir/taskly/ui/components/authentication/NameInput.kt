@@ -1,4 +1,4 @@
-package com.tajir.taskly.ui.components
+package com.tajir.taskly.ui.components.authentication
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions

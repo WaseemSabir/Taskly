@@ -1,16 +1,15 @@
 package com.tajir.taskly.viewModels
 
 import androidx.compose.runtime.compositionLocalOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tajir.taskly.data.api.models.GeneralResponseAuth
 import com.tajir.taskly.data.api.models.Login
 import com.tajir.taskly.data.api.repository.AuthRepository
 import com.tajir.taskly.data.api.models.Register
-import com.tajir.taskly.data.models.AuthenticationMode
-import com.tajir.taskly.data.models.AuthenticationState
-import com.tajir.taskly.data.models.PasswordRequirement
+import com.tajir.taskly.data.stateModels.AuthenticationMode
+import com.tajir.taskly.data.stateModels.AuthenticationState
+import com.tajir.taskly.data.stateModels.PasswordRequirement
 import com.tajir.taskly.events.AuthenticationEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -71,7 +70,7 @@ class AuthenticationViewModel : ViewModel() {
             isLoading = true
         )
 
-        if(uiState.value.authenticationMode == AuthenticationMode.SIGN_UP) {
+        if (uiState.value.authenticationMode == AuthenticationMode.SIGN_UP) {
             register()
         } else {
             login()
@@ -91,10 +90,9 @@ class AuthenticationViewModel : ViewModel() {
         val repo = AuthRepository()
         viewModelScope.launch {
             try {
-                val res = repo.register(data=data)
+                val res = repo.register(data = data)
                 updateAuthResponse(res)
-            }
-            catch (e : Exception) {
+            } catch (e: Exception) {
                 setError("Check Your Internet Connection.")
             }
         }
@@ -108,10 +106,9 @@ class AuthenticationViewModel : ViewModel() {
         val repo = AuthRepository()
         viewModelScope.launch {
             try {
-                val res = repo.login(data=data)
+                val res = repo.login(data = data)
                 updateAuthResponse(res)
-            }
-            catch (e : Exception) {
+            } catch (e: Exception) {
                 setError("Check Your Internet Connection.")
             }
 
@@ -124,7 +121,7 @@ class AuthenticationViewModel : ViewModel() {
         )
     }
 
-    private fun setError(err : String) {
+    private fun setError(err: String) {
         uiState.value = uiState.value.copy(
             error = err
         )
@@ -134,6 +131,22 @@ class AuthenticationViewModel : ViewModel() {
         uiState.value = uiState.value.copy(
             authResponse = null
         )
+    }
+
+    private fun clearState() {
+        uiState.value = uiState.value.copy(
+            authenticationMode = AuthenticationMode.SIGN_IN,
+            first_name = null,
+            last_name = null,
+            email = null,
+            password = null,
+            passwordRequirements = emptyList(),
+            isLoading = false,
+            authResponse = null,
+            error = null
+        )
+        println("Hello")
+        println(uiState.value)
     }
 
     fun handleEvent(authenticationEvent: AuthenticationEvent) {
@@ -165,6 +178,9 @@ class AuthenticationViewModel : ViewModel() {
             is AuthenticationEvent.SetError -> {
                 setError(authenticationEvent.error)
             }
+            is AuthenticationEvent.Logout -> {
+                clearState()
+            }
         }
     }
 
@@ -184,4 +200,4 @@ class AuthenticationViewModel : ViewModel() {
     }
 }
 
-val AuthState = compositionLocalOf<AuthenticationViewModel> { error("Authentication Context not found.") }
+val AuthState by lazy { compositionLocalOf<AuthenticationViewModel> { error("Authentication Context not found.") } }

@@ -1,4 +1,4 @@
-package com.tajir.taskly.ui.components
+package com.tajir.taskly.ui.components.authentication
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon

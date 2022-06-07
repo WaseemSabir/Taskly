@@ -1,4 +1,4 @@
-package com.tajir.taskly.data.models
+package com.tajir.taskly.data.stateModels
 
 import androidx.annotation.StringRes
 import com.tajir.taskly.R
