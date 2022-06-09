@@ -118,7 +118,7 @@ class Database:
         # get enviorment variables and run migrations
         args = self._get_args_by_env()
         os.system(
-            f'pg-migrator postgres://{args.get("user")}:{args.get("password")}@{args.get("host")}:{args.get("port")}/{args.get("dbname")} > /dev/null'
+            f'pg-migrator postgres://{args.get("user")}:{args.get("password")}@{args.get("host")}:{args.get("port")}/{args.get("dbname")}'
         )
 
         os.chdir(cur_dir)
