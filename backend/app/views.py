@@ -9,6 +9,27 @@ from flask import request
 from app.exceptions import *
 
 
+def homepage():
+    """
+    Returns the homepage.
+    Only Get Request Allowed. See main.py.
+    """
+    html = """
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>Taskly</title>
+        </head>
+        <body>
+            <p>
+                This is the RESTful API Endpoint for Taskly.
+            </p>
+        </body>
+    </html>
+    """
+    return html
+    
+
 def login():
     """
     Validates user credentials and returns a JWT token if valid.

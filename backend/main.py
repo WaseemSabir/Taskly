@@ -5,6 +5,7 @@ import os
 
 app = Flask(__name__)
 
+app.add_url_rule("/", view_func=views.homepage, methods=["GET"])
 app.add_url_rule("/register", view_func=views.register, methods=["POST"])
 app.add_url_rule("/login", view_func=views.login, methods=["POST"])
 app.add_url_rule("/user", view_func=views.user_views, methods=["GET", "PUT", "DELETE"])
