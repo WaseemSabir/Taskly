@@ -1,6 +1,7 @@
 from flask import Flask
 from app.utils import wait_for_db
 from app import views
+import os
 
 app = Flask(__name__)
 
@@ -15,4 +16,8 @@ app.add_url_rule("/tasks", view_func=views.task_list, methods=["GET"])
 
 if __name__ == "__main__":
     wait_for_db()
-    app.run(host="0.0.0.0", port=8003, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=os.environ.get("PORT",8003),
+        debug=os.environ.get("DEV", False)
+    )
