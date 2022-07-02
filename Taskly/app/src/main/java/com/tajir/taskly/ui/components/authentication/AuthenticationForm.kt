@@ -1,6 +1,7 @@
 package com.tajir.taskly.ui.components.authentication
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -13,6 +14,7 @@ import com.tajir.taskly.data.stateModels.AuthenticationMode
 import com.tajir.taskly.data.stateModels.PasswordRequirement
 import com.tajir.taskly.R
 
+@ExperimentalAnimationApi
 @Composable
 fun AuthenticationForm(
     modifier: Modifier = Modifier,

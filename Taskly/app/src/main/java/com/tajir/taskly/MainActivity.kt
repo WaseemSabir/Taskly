@@ -12,6 +12,7 @@ import com.tajir.taskly.ui.theme.TasklyTheme
 import com.tajir.taskly.navigation.NavigationRoutes
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.CompositionLocalProvider
 import com.tajir.taskly.viewModels.*
 
@@ -21,6 +22,7 @@ class MainActivity : ComponentActivity() {
     private val taskState by viewModels<TaskStateViewModel>()
 
     @RequiresApi(Build.VERSION_CODES.O)
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

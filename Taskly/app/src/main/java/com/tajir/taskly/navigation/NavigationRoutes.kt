@@ -2,6 +2,7 @@ package com.tajir.taskly.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
@@ -9,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.tajir.taskly.ui.screens.*
 
 @RequiresApi(Build.VERSION_CODES.O)
+@ExperimentalAnimationApi
 @Composable
 fun NavigationRoutes() {
     val navController = rememberNavController()

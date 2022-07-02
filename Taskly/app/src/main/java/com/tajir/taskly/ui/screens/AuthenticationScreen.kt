@@ -2,6 +2,7 @@ package com.tajir.taskly.ui.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,6 +22,7 @@ import com.tajir.taskly.events.TaskEvent
 import com.tajir.taskly.viewModels.TaskState
 
 @RequiresApi(Build.VERSION_CODES.O)
+@ExperimentalAnimationApi
 @Composable
 fun AuthenticationScreen(navController: NavController) {
     val authModel = AuthState.current

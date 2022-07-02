@@ -1,5 +1,6 @@
 package com.tajir.taskly.ui.components.authentication
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
@@ -9,6 +10,7 @@ import androidx.compose.ui.Modifier
 import com.tajir.taskly.data.stateModels.AuthenticationState
 import com.tajir.taskly.events.AuthenticationEvent
 
+@ExperimentalAnimationApi
 @Composable
 fun AuthenticationComponent(
     modifier: Modifier = Modifier,

@@ -31,6 +31,7 @@ import com.tajir.taskly.ui.components.home.*
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
+@ExperimentalAnimationApi
 @Composable
 fun HomeScreen(
     navController: NavController
