@@ -1,7 +1,7 @@
 package com.tajir.taskly.data.api
 
 object ApiConstants {
-    const val BASE_URL = "http://192.168.2.138:8003/"
+    const val BASE_URL = "https://taskly-backend.herokuapp.com/"
     const val REGISTER_ENDPOINT = "register"
     const val LOGIN_ENDPOINT = "login"
     const val USER_ENDPOINT = "user"
