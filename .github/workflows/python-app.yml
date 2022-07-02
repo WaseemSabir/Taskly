@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - master
-      - 'backend'
+    paths:
+      - backend/**
   pull_request:
     branches:
       - master
-      - 'backend'
+    paths:
+      - backend/**
 
 permissions:
   contents: read
